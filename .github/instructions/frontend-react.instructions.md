@@ -1,370 +1,899 @@
 # Frontend (React) Instructions
 
-## Purpose
+---
 
-- Define frontend engineering standards for AI-generated React code.
-- Ensure consistent, maintainable, accessible, and testable UI artifacts.
-- Align frontend agents with the repository's AI SDLC and the .NET backend response contract.
+# Purpose
 
-## Target Technology Stack
+This document defines the frontend development standards for all AI-generated React code.
 
-- Framework
-  - React 19
-  - TypeScript
-  - Vite
+Its objectives are to:
 
-- Routing
-  - React Router
+- Maintain a consistent project structure.
+- Generate production-ready React applications.
+- Ensure scalability and maintainability.
+- Promote reusable components.
+- Follow API-first development.
+- Keep business logic separate from UI.
+- Generate code that is testable and strongly typed.
 
-- State Management
-  - Redux Toolkit
+AI agents must follow these instructions unless explicitly overridden by the user.
 
-- API Communication
-  - Axios
+---
 
-- Forms
-  - React Hook Form
+# Target Technology Stack
 
-- Validation
-  - Zod
+## Framework
 
-- Styling
-  - SCSS Modules
+- React 19
+- TypeScript
 
-- Testing
-  - Jest
-  - React Testing Library
+## UI
 
-- Code Quality
-  - ESLint
-  - Prettier
+- Material UI (MUI)
 
-AI agents must remain within the approved technology stack unless explicitly instructed otherwise.
+## State Management
 
-## Architecture Style
+- Redux Toolkit
 
-- Use a feature-based architecture.
-- Organize application concerns into: `features`, `pages`, `components`, `hooks`, `services`, `store`, `utils`, `assets`.
-- Prefer composition and small focused modules.
+## Routing
 
-## Frontend Layer Responsibilities
+- React Router
 
-- Pages: compose features and represent route-level screens; orchestrate feature composition only.
-- Components: own rendering and presentation. They may contain simple UI interaction logic but must not contain business workflows or API orchestration.
-- Custom Hooks: encapsulate reusable UI behavior and interaction logic; expose declarative APIs for components.
-- Services: own API communication, caching adapters, and external integrations; do not render UI.
-- Redux Toolkit: manage shared application state and selectors for cross-feature concerns only.
-- Feature folders: own feature-specific components, hooks, state, services, and tests.
-- Utils: contain reusable helper functions with no UI responsibilities.
+## API Communication
 
-Emphasize separation of concerns and avoid mixing responsibilities across layers.
+- Axios
 
-## Recommended Folder Structure
+## Forms
 
-```text
+- React Hook Form
+
+## Validation
+
+- Zod
+
+## Testing
+
+- Jest
+- React Testing Library
+
+## Localization
+
+- i18next
+
+Do not introduce additional frameworks unless explicitly requested.
+
+---
+
+# Output Contract
+
+The Frontend Agent should generate only the files required for the requested feature.
+
+Typical outputs include:
+
+- Pages
+- Components
+- Hooks
+- Redux Slice
+- API Service
+- Types
+- Validation Schema
+- Tests
+- Route updates
+
+Do NOT generate:
+
+- Backend code
+- Database code
+- API implementations
+- Infrastructure
+- CI/CD
+- Docker
+- Kubernetes
+- Unused helper classes
+
+Generate minimal but production-ready code.
+
+---
+
+# Project Structure
+
+Use the following project structure.
+
+```
 src/
+│
+├── api/
+│
 ├── assets/
+│
 ├── components/
+│
+├── config/
+│
+├── constants/
+│
 ├── features/
+│
 ├── hooks/
+│
+├── layouts/
+│
 ├── pages/
+│
+├── routes/
+│
 ├── services/
+│
 ├── store/
+│
 ├── styles/
+│
+├── theme/
+│
+├── types/
+│
 ├── utils/
-├── App.tsx
-└── main.tsx
+│
+└── tests/
 ```
 
-## Frontend Design Principles
+Do not create new root folders without user approval.
 
-- Build reusable UI components with predictable APIs.
-- Provide a consistent and accessible user experience across features.
-- Develop mobile-first and responsive layouts.
-- Separate presentation from business logic; keep components declarative.
-- Ensure predictable component behavior and minimize side effects.
-- Design for maintainability and incremental evolution.
+---
 
-## Redux Architecture Rules
+# Folder Responsibilities
 
-- Create one slice per feature whenever practical.
-- Keep selectors colocated with their feature slices.
-- Avoid a monolithic global store; prefer feature-scoped slices.
-- Store only shared application state in Redux; keep UI state local.
-- Prefer RTK Query for server state and caching instead of storing API responses manually.
-- Avoid duplicate state across Redux and component state.
+## api/
 
-## Custom Hook Guidelines
+Shared axios configuration.
 
-- Extract reusable logic into custom hooks to encapsulate behavior.
-- Custom Hooks may orchestrate reusable UI behavior and invoke service-layer  APIs, but should not contain complex business rules.
-- Keep hooks single-purpose, well-documented, and easily testable.
-- Components should primarily focus on rendering and composition.
-- Avoid deeply nested or interdependent hooks that create tight coupling.
+Contains:
 
-## API Response Handling
+- axios instance
+- interceptors
 
-- Consume the standardized backend response contract for every API interaction (success/data/error).
-- Explicitly handle loading, empty, success, and error states for each request.
-- Map backend error codes to user-friendly messages; do not expose raw backend exception details.
-- Centralize error mapping and retry logic in the service layer or adapters.
+No business logic.
 
-## Responsive Design Guidelines
+---
 
-- Design mobile-first layouts and scale up for larger viewports.
-- Use flexible grid systems and responsive spacing tokens.
-- Define and use consistent breakpoints and responsive typography.
-- Build adaptive components that adjust layout and behavior by viewport.
+## assets/
 
-## AI Restrictions
+Contains:
 
-- AI agents must not introduce additional frameworks, UI libraries, CSS frameworks, state management libraries, or architectural patterns unless explicitly instructed.
-- Forbidden examples (do not add): Tailwind CSS, Bootstrap, Material UI, Ant Design, Chakra UI, Zustand, MobX, Recoil.
+- images
+- icons
+- fonts
+- svg
+- illustrations
 
-## React Best Practices
+No components.
 
-- Prefer controlled components for forms where possible.
-- Lift state only when necessary; avoid unnecessary prop drilling.
-- Prefer composition over inheritance; keep single-responsibility components.
-- Use `React.memo` only when measurable benefits exist; avoid premature memoization.
-- Use `useMemo` and `useCallback` only when they prevent proven performance issues.
-- Avoid unnecessary re-renders by keeping props stable and using keys correctly.
+---
 
-## Design System Guidelines
+## components/
 
-- Build and maintain a small set of reusable UI primitives: Button, Input, Card, Modal, Table, Dialog, Loader.
-- Maintain consistent spacing, typography, colors, and component behavior across the app.
-- Reuse existing components before creating new ones; avoid duplicate UI implementations.
-- Document component contracts and provide examples in shared story or docs when possible.
-
-## Project Structure Rules
-
-- Keep features self-contained with local components, styles, and tests.
-- Centralize global concerns: routing, store, API services, and shared UI components.
-- Co-locate component tests and styling with component source files.
-- Keep import paths predictable and avoid deep relative chains.
-
-## Component Design Standards
-
-- Prefer functional components and hooks.
-- Keep components small, single-responsibility, and reusable.
-- Prefer composition over inheritance; expose clear props-driven APIs.
-- Separate presentation from business logic; move orchestration into hooks or services.
-- Avoid deeply nested hierarchies and reduce prop drilling using context or local stores when necessary.
-
-## State Management Rules
-
-- Use local component state for UI-only concerns.
-- Use Redux Toolkit for shared application state and derived selectors.
-- Keep server state in caching layers (e.g., RTK Query) or dedicated services, not in Redux unless required.
-- Avoid global state for transient UI details.
-
-## API Integration Rules
-
-- Route all API calls through a dedicated `services/api` layer using Axios.
-- Never call APIs directly from UI components; use hooks or service adapters instead.
-- Follow the backend response contract (unified success/error schema) consistently.
-- Handle loading, empty, success, and error states explicitly in UI flows.
-
-## Routing Guidelines
-
-- Keep route definitions centralized and typed.
-- Protect authenticated routes with guards and role checks at the routing layer.
-- Use lazy loading for route-based code-splitting.
-
-## Form Handling Rules
-
-- Use React Hook Form for form state and submission.
-- Use Zod schemas for validation and typing; derive TypeScript types from schemas where possible.
-- Keep validation rules reusable and colocated with form definitions.
-
-## Styling Guidelines
-
-- Use SCSS Modules for component-scoped styles.
-- Prefer utility classes and variables for shared design tokens.
-- Avoid inline styles except for dynamic runtime values that cannot be expressed in CSS.
-- Build a small library of reusable UI primitives (Button, Input, Modal) with consistent theming.
-
-## Performance Guidelines
-
-- Prevent unnecessary re-renders; use React.memo and selective memoization judiciously.
-- Use lazy loading for large modules and images.
-- Optimize expensive computations with `useMemo` and `useCallback` only when proven needed.
-- Measure before optimizing; prefer readable code unless optimization is justified.
-
-## Accessibility Guidelines
-
-- Use semantic HTML and ARIA attributes where necessary.
-- Ensure keyboard accessibility for interactive elements.
-- Associate labels with form controls and provide descriptive alt text for images.
-- Maintain sufficient color contrast and test with common screen-reader flows.
-
-## Error Handling Strategy
-
-- Surface user-friendly error messages and actionable steps.
-- Do not expose backend stack traces or internal error details to users.
-- Provide graceful fallback UI for failed loads and partial failures.
-
-## Testing Expectations
-
-- Write unit tests for components, hooks, and utilities using Jest and React Testing Library.
-- Test user interactions and critical flows (form submissions, navigation, API error handling).
-- Mock network calls using test doubles; prefer integration tests for end-to-end validation.
-- Keep tests fast, deterministic, and maintainable.
-
-## AI Behavior Rules
-
-- Do not over-engineer component hierarchies or introduce abstractions prematurely.
-- Prefer the simplest working solution that is readable and maintainable.
-- Keep business logic out of UI components; place it in services, hooks, or Application backends.
-- Ask clarifying questions when UI requirements are missing or ambiguous.
-- Maintain consistent code quality with linting and formatting.
-
-## Code Review Checklist
-
-- Are components small, focused, and reusable?
-- Is business logic separated from presentation?
-- Are accessibility considerations addressed?
-- Are API calls routed through service layer and handled for loading/error states?
-- Are state management decisions justified and minimal?
-- Are styles modular and consistent with design tokens?
-- Are tests included and do they cover critical behavior?
-- Does the code follow ESLint and Prettier configurations?
-
-## Authentication Guidelines
-
-- Store authentication tokens securely; prefer HttpOnly cookies when supported by the backend.
-- Never store passwords, refresh tokens, or sensitive credentials in Redux or browser storage (localStorage/sessionStorage).
-- Treat authentication (who you are) and authorization (what you can do) as separate concerns.
-- Automatically redirect unauthenticated users to the login page and protect routes with guards.
-- Gracefully handle expired sessions and token expiration with clear UX and reauthentication flows.
-
-Example authentication flow:
-
-```text
-User Login
-  ↓
-Receive JWT / Session
-  ↓
-Store securely
-  ↓
-Access Protected Routes
-  ↓
-Refresh / Reauthenticate when required
-```
-
-## Environment Configuration
-
-- Use `.env` files for environment-specific configuration and read values via environment variables.
-- Never hardcode API URLs or secrets in source code.
-- Keep development, QA, and production configuration separate and documented.
-- Document required environment variables for local and CI environments.
-- AI agents must never generate or embed secrets or API keys in code.
-
-Example required variables:
-
-```text
-VITE_API_BASE_URL
-VITE_APP_NAME
-VITE_ENVIRONMENT
-```
-
-## Internationalization Guidelines
-
-- Do not hardcode user-facing strings in components; use translation resources.
-- Prefer translation keys over literal strings and derive TypeScript types from resource schemas when possible.
-- Format dates, currencies, and numbers using locale-aware utilities.
-- Design components to accept translation keys and support future multilingual requirements.
-- Keep UI text externalized and version-controlled for maintainability.
-
-Example translation keys:
-
-```text
-auth.login.title
-
-accounts.balance
-
-transactions.history
-```
-
-## Naming Conventions
-
-### Components
-
-- Use PascalCase for component filenames and exported component names.
+Reusable UI components shared across features.
 
 Examples:
 
-```text
-LoginForm.tsx
-TransferCard.tsx
-AccountSummary.tsx
-```
+- Button
+- Header
+- Footer
+- Table
+- Dialog
+- Loader
+- Card
 
-### Pages
+Keep components generic.
 
-- Use PascalCase ending with "Page" for route-level components.
+---
 
-Examples:
+## config/
 
-```text
-LoginPage.tsx
-DashboardPage.tsx
-TransferPage.tsx
-```
-
-### Hooks
-
-- Prefix hook files and exports with `use` (camelCase file name recommended).
+Application configuration.
 
 Examples:
 
-```text
-useLogin.ts
-useAccounts.ts
-useTransfer.ts
-```
+- Environment configuration
+- Constants
+- App configuration
 
-### Redux
+---
 
-- Use feature-focused slice names and keep files descriptive.
+## constants/
 
-Examples:
-
-```text
-authSlice.ts
-
-accountSlice.ts
-
-transactionSlice.ts
-```
-
-### Services
-
-- Suffix service modules with `Service` and expose clear method names.
+Application constants.
 
 Examples:
 
-```text
-AuthService.ts
+- Routes
+- API URLs
+- Regex
+- Messages
 
-AccountService.ts
+Avoid magic strings.
 
-TransactionService.ts
-```
+---
 
-### Utilities
+## features/
 
-- Use camelCase for utility filenames and keep utilities side-effect free.
+Feature-specific implementation.
+
+Every feature owns its own components, services, hooks and tests.
+
+---
+
+## hooks/
+
+Reusable custom hooks.
 
 Examples:
 
-```text
-formatCurrency.ts
+- useAuth
+- useDebounce
+- usePagination
 
-calculateInterest.ts
+Business logic should live here when reusable.
 
-dateFormatter.ts
+---
+
+## layouts/
+
+Application layouts.
+
+Examples:
+
+- AuthLayout
+- DashboardLayout
+
+---
+
+## pages/
+
+Route-level components.
+
+Pages orchestrate feature components.
+
+Pages should contain minimal logic.
+
+---
+
+## routes/
+
+React Router configuration.
+
+Contains:
+
+- Protected Routes
+- Public Routes
+- Route definitions
+
+---
+
+## services/
+
+API communication.
+
+Contains:
+
+- API calls
+- Service wrappers
+
+Never call Axios directly inside components.
+
+---
+
+## store/
+
+Redux Toolkit configuration.
+
+Contains:
+
+- store.ts
+- root reducer
+- slices
+
+---
+
+## styles/
+
+Global styles.
+
+Avoid feature-specific styling here.
+
+---
+
+## theme/
+
+Material UI theme.
+
+Contains:
+
+- palette
+- typography
+- spacing
+- breakpoints
+
+---
+
+## types/
+
+Shared interfaces.
+
+Examples:
+
+- DTOs
+- API Models
+- Enums
+- Response Types
+
+---
+
+## utils/
+
+Pure utility functions.
+
+Examples:
+
+- formatDate()
+- currencyFormatter()
+- validators()
+
+Utilities should have no side effects.
+
+---
+
+## tests/
+
+Shared testing utilities.
+
+Contains:
+
+- test wrappers
+- mock providers
+- helpers
+
+---
+
+# Feature Folder Structure
+
+Every feature should follow this structure.
+
+```
+features/
+
+login/
+
+    components/
+
+    hooks/
+
+    pages/
+
+    services/
+
+    store/
+
+    types/
+
+    validation/
+
+    tests/
 ```
 
-Naming must remain consistent across the repository to improve discoverability and maintainability.
+Only create folders required by the feature.
+
+Avoid empty folders.
+
+---
+
+# Architecture Rules
+
+Follow Feature-Based Architecture.
+
+Business Flow
+
+```
+Page
+
+↓
+
+Component
+
+↓
+
+Hook
+
+↓
+
+Service
+
+↓
+
+Axios
+
+↓
+
+Backend API
+```
+
+Rules
+
+- Pages orchestrate features.
+- Components display UI.
+- Hooks contain reusable UI logic.
+- Services communicate with APIs.
+- Redux stores shared application state.
+- Components must never call Axios directly.
+- Business logic must never be embedded inside JSX.
+- Keep UI and business logic separated.
+
+---
+
+# React Standards
+
+Use only Functional Components.
+
+Never use Class Components.
+
+Prefer named exports unless project conventions specify otherwise.
+
+Each file should contain a single component.
+
+Keep components focused on one responsibility.
+
+Extract repeated logic into reusable hooks.
+
+Avoid deeply nested JSX.
+
+Prefer composition over inheritance.
+
+Prefer reusable components over duplicated code.
+
+Pages should assemble components instead of implementing business logic.
+
+Keep components approximately under 200–250 lines.
+
+Avoid unnecessary prop drilling.
+
+Use hooks instead of helper classes.
+
+Prefer controlled forms.
+
+Avoid unnecessary useEffect calls.
+
+Only use useMemo and useCallback when there is measurable benefit.
+
+Do not optimize prematurely.
+
+---
+
+# TypeScript Standards
+
+Strict mode is mandatory.
+
+Never use:
+
+- any
+- Function
+- Object
+
+Avoid:
+
+- unknown (unless required)
+- type assertions (`as`)
+- ts-ignore
+- ts-expect-error
+
+Always define:
+
+- Component Props
+- API Request Models
+- API Response Models
+- Hook Return Types
+- Service Return Types
+
+Prefer:
+
+Interfaces
+
+```ts
+interface LoginRequest {
+    email: string;
+    password: string;
+}
+```
+
+Use type aliases for:
+
+- unions
+- utility types
+- mapped types
+
+Example
+
+```ts
+type Status = "success" | "failure";
+```
+
+Always provide explicit return types for exported functions.
+
+Use readonly where appropriate.
+
+Avoid nullable values unless required.
+
+Prefer optional properties over null.
+
+Never disable strict TypeScript settings.
+
+Use enums only when shared across multiple modules.
+
+Prefer constants for UI values.
+
+Keep interfaces close to the feature that owns them.
+
+Do not duplicate API models.
+
+Reuse existing types whenever possible.
+
+---
+
+# Material UI Standards
+
+- Use Material UI v5+ only.
+- Do not mix with Bootstrap or Tailwind.
+- Use sx prop for styling instead of CSS files.
+- Use theme-based spacing only.
+- Prefer MUI components over native HTML where applicable.
+
+Allowed MUI Components:
+- Box
+- Grid
+- Stack
+- Typography
+- Button
+- TextField
+- Paper
+- Card
+- Dialog
+- Snackbar
+- AppBar
+- Toolbar
+
+Rules:
+- Avoid inline styles (style={{}}).
+- Avoid creating custom UI components when MUI already provides one.
+- Always use responsive design using MUI breakpoints.
+
+---
+
+# Responsive Breakpoints
+
+Use MUI theme breakpoints only:
+
+- xs (0px)
+- sm (600px)
+- md (900px)
+- lg (1200px)
+- xl (1536px)
+
+Rules:
+- Do not use raw media queries.
+- Always use theme.breakpoints.
+- Ensure all pages are mobile-first.
+
+---
+
+# React Router Standards
+
+- Use React Router v6+
+- Define all routes in /routes folder.
+
+Rules:
+- Separate public and protected routes.
+- Use layout-based routing.
+- Lazy load pages when possible.
+
+Example:
+
+```ts
+const LoginPage = lazy(() => import("../pages/LoginPage"));
+```
+
+- Protect routes using wrapper components.
+- Do not define routes inside components.
+
+---
+
+# Redux Toolkit Standards
+
+Rules:
+- One slice per feature.
+- Keep global state minimal.
+- Do not store derived state.
+
+Store Template:
+
+```ts
+import { configureStore } from "@reduxjs/toolkit";
+
+export const store = configureStore({
+  reducer: {},
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+Slice Template:
+
+```ts
+import { createSlice } from "@reduxjs/toolkit";
+
+interface ExampleState {
+  loading: boolean;
+}
+
+const initialState: ExampleState = {
+  loading: false,
+};
+
+const exampleSlice = createSlice({
+  name: "example",
+  initialState,
+  reducers: {
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+  },
+});
+
+export const { setLoading } = exampleSlice.actions;
+export default exampleSlice.reducer;
+```
+
+Rules:
+- Never mutate state outside slices.
+- Use Redux only for shared state.
+- Do not store UI-only state in Redux.
+
+---
+
+# Axios Standards
+
+Rules:
+- Single axios instance only.
+- All API calls must go through services layer.
+
+Axios Instance:
+
+```ts
+import axios from "axios";
+
+export const api = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+```
+
+Interceptors:
+
+```ts
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+```
+
+Rules:
+- Never call axios directly inside components.
+- Always use service layer.
+
+---
+
+# Service Template
+
+```ts
+import { api } from "../api/axios";
+
+export const loginService = async (data: LoginRequest) => {
+  const response = await api.post("/auth/login", data);
+  return response.data;
+};
+```
+
+Rules:
+- Services only handle API communication.
+- No UI logic inside services.
+
+---
+
+# Hook Template
+
+```ts
+import { useState } from "react";
+import { loginService } from "../services/loginService";
+
+export const useLogin = () => {
+  const [loading, setLoading] = useState(false);
+
+  const login = async (data: any) => {
+    setLoading(true);
+    try {
+      return await loginService(data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { login, loading };
+};
+```
+
+Rules:
+- Hooks handle reusable logic.
+- Do not include JSX inside hooks.
+
+---
+
+# Page Template
+
+```ts
+export const LoginPage = () => {
+  return (
+    <div>
+      <LoginForm />
+    </div>
+  );
+};
+```
+
+Rules:
+- Pages are orchestration layer only.
+- No API calls in pages.
+- No business logic in pages.
+
+---
+
+# Component Template
+
+```ts
+interface Props {
+  title: string;
+}
+
+export const SampleComponent = ({ title }: Props) => {
+  return (
+    <div>
+      {title}
+    </div>
+  );
+};
+```
+
+Rules:
+- One component per file.
+- Keep components reusable.
+- Avoid heavy logic inside components.
+
+---
+
+# API Flow
+
+Standard flow:
+
+UI → Hook → Service → Axios → Backend
+
+Rules:
+- Never break this flow.
+- Never call backend directly from UI.
+
+---
+
+# UI Theme Rules
+
+- Use centralized theme configuration.
+- Do not hardcode colors.
+- Use theme.palette only.
+
+Rules:
+- All spacing must use theme.spacing.
+- All fonts must use theme.typography.
+- Maintain consistent design system.
+
+---
+
+# i18n Rules
+
+- Use i18next only if multilingual support is required.
+- Do not hardcode reusable strings.
+- Store translations in /locales folder.
+
+---
+
+# Testing Standards
+
+Frameworks:
+- Jest
+- React Testing Library
+
+Rules:
+- Test user behavior, not implementation.
+- Mock API calls.
+- Avoid snapshot testing unless required.
+
+Component Test Example:
+
+```ts
+import { render, screen } from "@testing-library/react";
+import { LoginPage } from "../LoginPage";
+
+test("renders login page", () => {
+  render(<LoginPage />);
+  expect(screen.getByText(/login/i)).toBeInTheDocument();
+});
+```
+
+Service Test Example:
+
+```ts
+import { loginService } from "../loginService";
+
+test("login service returns response", async () => {
+  const data = await loginService({ email: "test@test.com", password: "123" });
+  expect(data).toBeDefined();
+});
+```
+
+Rules:
+- Minimum 1 test per feature.
+- Cover happy path + failure path.
+
+---
+
+# File Naming Rules
+
+- Use PascalCase for components: LoginPage.tsx
+- Use camelCase for hooks: useLogin.ts
+- Use kebab-case for folders: login-feature/
+- Use descriptive names only.
+
+---
+
+# AI Restrictions
+
+- Do not use any type.
+- Do not generate unused code.
+- Do not duplicate components.
+- Do not create multiple implementations of same logic.
+- Do not bypass architecture rules.
+- Do not write backend logic.
+- Do not hardcode API URLs.
+- Do not skip service layer.
+- Do not break folder structure.
+- Always prefer reusable components.
+
+---
+
+# Code Review Checklist
+
+Before finalizing code:
+
+- Uses TypeScript strictly
+- No `any` usage
+- Uses Material UI properly
+- Follows API → Service → Hook → UI flow
+- No direct API calls in components
+- Redux used only when needed
+- Responsive design implemented
+- Proper folder structure followed
+- Reusable components used
+- Tests included
+- No duplicated logic
+- Clean separation of concerns
+
+---
+# END OF FRONTEND INSTRUCTION FILE
